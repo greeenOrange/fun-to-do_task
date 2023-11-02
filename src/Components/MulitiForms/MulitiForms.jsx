@@ -1,6 +1,8 @@
 const MulitiForms = () => {
   return (
-    <div>MulitiForms</div>
+    <div>
+      
+    </div>
   )
 }
 
