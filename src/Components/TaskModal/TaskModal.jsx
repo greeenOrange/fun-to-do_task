@@ -5,8 +5,7 @@ import 'react-day-picker/dist/style.css';
 
 const TaskModal = ({ task, tasks, setTasks }) => {
     const [editedTaskTitle, setEditedTaskTitle] = useState(task?.title || '');
-    console.log(editedTaskTitle);
-    const [description, setDescription] = useState(task?.details || '');
+    const [description, setDescription] = useState(task?.description || '');
     const [priority, setPriority] = useState('medium');
     const initialDays = [];
     const [days, setDays] = useState();
@@ -26,8 +25,6 @@ const TaskModal = ({ task, tasks, setTasks }) => {
             days,
             priority,
         };
-        console.log(updatedTask);
-
         const updatedTasks = tasks?.map((t) =>
             t?.id === task?.id ? updatedTask : t
         );
