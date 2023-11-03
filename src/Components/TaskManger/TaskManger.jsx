@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import TaskList from "../../TaskList/TaskList";
+import TaskList from "../TaskList/TaskList";
 import toast, { Toaster } from 'react-hot-toast';
 
 const TaskManger = ({ tasks, setTasks }) => {
@@ -62,7 +62,7 @@ const TaskManger = ({ tasks, setTasks }) => {
                     </form>
                 </div>
 
-                <TaskList tasks={tasks} setTasks={setTasks} />
+                <TaskList tasks={tasks} setTasks={setTasks} handleSubmit={handleSubmit} />
             </div>
         </>
     )

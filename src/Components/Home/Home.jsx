@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import TaskManger from "./TaskManger/TaskManger"
+import TaskManger from "../TaskManger/TaskManger";
+
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
