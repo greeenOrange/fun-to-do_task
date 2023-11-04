@@ -1,9 +1,8 @@
-import React from 'react'
 import TaskHeader from '../TaskHeader/TaskHeader';
 import TaskDND from '../TaskDND/TaskDND';
 import toast from 'react-hot-toast';
 
-const TaskSection = ({ status, setTasks, tasks, todos, inProgress, done, handleSubmit }) => {
+const TaskSection = ({ status, setTasks, tasks, index, todos, inProgress, done, handleSubmit }) => {
 
     let text = "todo";
     let bg = "bg-red-500";
@@ -39,15 +38,39 @@ const TaskSection = ({ status, setTasks, tasks, todos, inProgress, done, handleS
         })
     }
 
+    const handleDragDrop = (res) => {
+        const { source, destination, type } = res;
+        if (!res) {
+            return
+        }
+        if (source.droppableId === destination.droppableId && source.index === destination.index) {
+            return
+        }
+        if (type === 'group') {
+            const reOrderdTasks = [...tasks];
+
+            const sourceIndex = source.index;
+            const destinationIndex = destination.index;
+            const [removeTask] = reOrderdTasks.splice(sourceIndex, 1)
+            reOrderdTasks.splice(destinationIndex, 0, removeTask);
+            return setTasks(reOrderdTasks)
+        }
+    }
+
     return (
-        <div>
+        <>
+
             <TaskHeader text={text} bg={bg} count={taskPriority?.length} handleSubmit={handleSubmit} />
             <div className="flex flex-col gap-4 justify-center items-center">
-                {taskPriority?.length > 0 && taskPriority?.map(task =>
-                    <TaskDND key={task?.id} task={task} tasks={tasks} setTasks={setTasks} />
+                {taskPriority?.length > 0 && taskPriority?.map((task, index) =>
+                    <TaskDND key={task?.id} task={task}
+                        tasks={tasks} setTasks={setTasks}
+                        index={index}
+                    />
+
                 )}
             </div>
-        </div>
+        </>
 
     )
 }
