@@ -2,18 +2,18 @@ import { HiMiniEllipsisVertical, HiOutlineTrash } from "react-icons/hi2";
 import TaskModal from '../TaskModal/TaskModal';
 import toast from 'react-hot-toast';
 import { Draggable } from 'react-beautiful-dnd';
+import { useEffect } from "react";
 
 const TaskDND = ({ task, tasks, setTasks, index }) => {
-  // const [open, setOpen] = useState(false);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
+  
+  // const handleDelete = (id) => {
+  //   const shortTodo = tasks.filter(task => task?.id !== id);
+  //   localStorage.setItem('tasks', JSON.stringify(shortTodo));
+  //   setTasks(shortTodo);
+  //   toast.success('Successfully Delete!')
+  // }
 
-  const handleDelete = (id) => {
-    const shortTodo = tasks.filter(task => task?.id !== id);
-    localStorage.setItem('tasks', JSON.stringify(shortTodo));
-    setTasks(shortTodo);
-    toast.success('Successfully Delete!')
-  }
+
 
   //  const [{ isDragging }, drag] = useDrag(() => ({
   //      type: 'task',

@@ -25,13 +25,17 @@ const TaskModal = ({ task, tasks, setTasks }) => {
             days,
             priority,
         };
-        const updatedTasks = tasks?.map((t) =>
-            t?.id === task?.id ? updatedTask : t
-        );
-
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-
-        setTasks(updatedTasks);
+        fetch("http://localhost:5000/tasks", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    })
+      .then((res) => res.json())
+      .then(data => {
+        if(data){
+          alert('successfully added');
+        }
+      })
 
     };
 

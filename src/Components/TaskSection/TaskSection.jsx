@@ -1,8 +1,12 @@
 import TaskHeader from '../TaskHeader/TaskHeader';
 import TaskDND from '../TaskDND/TaskDND';
 import toast from 'react-hot-toast';
+import { useLoaderData } from 'react-router-dom';
 
 const TaskSection = ({ status, setTasks, tasks, index, todos, inProgress, done, handleSubmit }) => {
+
+    const allTask = useLoaderData()
+    console.log(allTask);
 
     let text = "todo";
     let bg = "bg-red-500";
@@ -60,9 +64,9 @@ const TaskSection = ({ status, setTasks, tasks, index, todos, inProgress, done, 
     return (
         <>
 
-            <TaskHeader text={text} bg={bg} count={taskPriority?.length} handleSubmit={handleSubmit} />
+            <TaskHeader text={text} bg={bg} count={allTask?.length} handleSubmit={handleSubmit} />
             <div className="flex flex-col gap-4 justify-center items-center">
-                {taskPriority?.length > 0 && taskPriority?.map((task, index) =>
+                {allTask?.length > 0 && allTask?.map((task, index) =>
                     <TaskDND key={task?.id} task={task}
                         tasks={tasks} setTasks={setTasks}
                         index={index}

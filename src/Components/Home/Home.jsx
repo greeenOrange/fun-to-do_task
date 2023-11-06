@@ -16,13 +16,13 @@ const Home = () => {
     updateCharacters(items);
   }
 
-  useEffect(() => {
-    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
-    if (savedTasks) {
-        setTasks(savedTasks);
-        console.log(savedTasks);
-    }
-}, [])
+//   useEffect(() => {
+//     const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+//     if (savedTasks) {
+//         setTasks(savedTasks);
+//         console.log(savedTasks);
+//     }
+// }, [])
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center">

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TaskList from "../TaskList/TaskList";
 import toast, { Toaster } from 'react-hot-toast';
 
-const TaskManger = ({ tasks, setTasks }) => {
+const TaskManger = ({  tasks, setTasks }) => {
 
     const [task, setTask] = useState(
         {
