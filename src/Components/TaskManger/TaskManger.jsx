@@ -1,42 +1,38 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 import TaskList from "../TaskList/TaskList";
 import toast, { Toaster } from 'react-hot-toast';
 
-const TaskManger = ({  tasks, setTasks }) => {
-
-    const [task, setTask] = useState(
+const TaskManger = () => {
+    const [tasks, setTasks] = useState(
         {
             id: "",
             title: "",
             status: "todo"
         }
     );
-
     const handleChange = (e) => {
-        setTask({ ...task, id: uuidv4(), title: e.target.value })
+        ({ title: e.target.value })
     }
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const taskData = {
-            ...task,
-            id: uuidv4(),
+            ...tasks,
+            title: e.target.value,
         };
         console.log(taskData);
-
-        setTasks((prev) => {
-            const updatedTasks = [...prev, taskData];
-            localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-            return updatedTasks;
-        });
-        toast.success('Successfully assigned task.');
-
-        setTask({
-            id: '',
-            title: '',
-            status: 'todo',
-        });
+        fetch("http://localhost:5000/tasks", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(taskData),
+        })
+            .then((res) => res.json())
+            .then(data => {
+                if (data) {
+                    toast.success('title added');
+                }
+            })
     }
     return (
         <>
@@ -55,7 +51,7 @@ const TaskManger = ({  tasks, setTasks }) => {
                             type="text"
                             className="w-[20rem] border border-gray-300 p-3 rounded-lg"
                             placeholder="Type Task..."
-                            value={task?.title}
+                            value={tasks?.title}
                             onChange={handleChange}
                         />
                         <button className="btn btn-primary">ADD</button>

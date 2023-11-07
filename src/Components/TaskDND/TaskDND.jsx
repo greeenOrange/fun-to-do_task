@@ -1,45 +1,42 @@
 import { HiMiniEllipsisVertical, HiOutlineTrash } from "react-icons/hi2";
 import TaskModal from '../TaskModal/TaskModal';
 import toast from 'react-hot-toast';
-import { Draggable } from 'react-beautiful-dnd';
-import { useEffect } from "react";
 
+import { useDrag, useDrop } from 'react-dnd';
 const TaskDND = ({ task, tasks, setTasks, index }) => {
-  
-  // const handleDelete = (id) => {
-  //   const shortTodo = tasks.filter(task => task?.id !== id);
-  //   localStorage.setItem('tasks', JSON.stringify(shortTodo));
-  //   setTasks(shortTodo);
-  //   toast.success('Successfully Delete!')
-  // }
+  console.log(task);
 
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'task',
+    item: { id: task?._id },
+    collect: (monitor) => ({
+        isDragging: !!monitor.isDragging()
+    })
+}))
 
-
-  //  const [{ isDragging }, drag] = useDrag(() => ({
-  //      type: 'task',
-  //      item: { id: task?.id },
-  //      collect: (monitor) => ({
-  //          isDragging: !!monitor.isDragging()
-  //      })
-  //  }))
+  const handleDelete = (id) => {
+    fetch(`http://localhost:5000/tasks/${id}`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json" }
+    })
+      .then((res) => res.json())
+      .then(data => {
+        if(data){
+          alert('successfully added');
+        }
+      }).catch((err) => {
+        console.error("Error while deleting:", err);
+      });
+    }
 
   return (
-    <Draggable draggableId={task?.id} 
-    key={task?.id}
-    index={index}
-    >
-      {(provided) => (
-        <div
-          {...provided.dragHandleProps} 
-          {...provided.draggableProps} 
-          ref={provided.innerRef}
-          className="card w-96 bg-base-100 shadow-xl">
+        <div ref={drag} className="card w-96 bg-base-100 shadow-xl">
           <div className="card-body">
             <div className="flex items-center justify-between">
               <h2 className="card-title">{task?.title || "No Title"}</h2>
               <div className="flex gap-4">
-                <HiMiniEllipsisVertical onClick={() => document.getElementById(task?.id).showModal()} />
-                <HiOutlineTrash onClick={() => handleDelete(task?.id)} />
+                <HiMiniEllipsisVertical onClick={() => document.getElementById(task?._id).showModal()} />
+                <HiOutlineTrash onClick={() => handleDelete(task?._id)} />
               </div>
               <TaskModal task={task} tasks={tasks} setTasks={setTasks} />
             </div>
@@ -50,10 +47,7 @@ const TaskDND = ({ task, tasks, setTasks, index }) => {
             </div>
           </div>
         </div>
-      )}
 
-    </Draggable>
-  )
-}
+)}
 
 export default TaskDND

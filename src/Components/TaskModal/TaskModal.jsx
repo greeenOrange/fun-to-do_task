@@ -4,6 +4,8 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
 const TaskModal = ({ task, tasks, setTasks }) => {
+    const isEditing = task !== null;
+
     const [editedTaskTitle, setEditedTaskTitle] = useState(task?.title || '');
     const [description, setDescription] = useState(task?.description || '');
     const [priority, setPriority] = useState('medium');
@@ -17,31 +19,58 @@ const TaskModal = ({ task, tasks, setTasks }) => {
     );
 
     const handleSave = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+
         const updatedTask = {
-            ...task,
             title: editedTaskTitle,
             description,
-            days,
             priority,
+            days,
         };
-        fetch("http://localhost:5000/tasks", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(updatedTask),
-    })
-      .then((res) => res.json())
-      .then(data => {
-        if(data){
-          alert('successfully added');
-        }
-      })
 
+        if (isEditing) {
+            // If editing an existing task, update it
+            updatedTask._id = task._id; // Include the task ID for update
+
+            fetch(`http://localhost:5000/tasks/${task._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTask),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.message === 'Task updated successfully') {
+                        setTasks((prevTasks) => {
+                            const updatedTasks = prevTasks.map((t) =>
+                                t._id === task._id ? { ...t, ...updatedTask } : t
+                            );
+                            return updatedTasks;
+                        });
+                    } else {
+                        alert('Error updating task');
+                    }
+                });
+        } else {
+            // If not editing, create a new task
+            fetch('http://localhost:5000/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTask),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.message === 'Task added successfully') {
+                        setTasks((prevTasks) => [...prevTasks, data.task]);
+                    } else {
+                        alert('Error adding task');
+                    }
+                });
+        }
     };
 
     return (
         <>
-            <dialog id={task?.id} className="modal">
+            <dialog id={task?._id} className="modal">
                 <div className="modal-box flex flex-col items-center gap-5">
                     <form action="" onSubmit={handleSave}>
 
@@ -69,7 +98,7 @@ const TaskModal = ({ task, tasks, setTasks }) => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
-                        <button className="btn btn-primary">submit</button>
+                        <button className="btn btn-primary">{isEditing ? 'Update' : 'Submit'}</button>
                     </form>
                 </div>
                 <form method="dialog" className="modal-backdrop">
